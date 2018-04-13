@@ -21,7 +21,7 @@ build:
   script:
     - npm run build
   artifacts:
-    path:
+    paths:
       - dist
     expire_in: 20min
 

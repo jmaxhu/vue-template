@@ -1,9 +1,5 @@
 image: node:8-alpine
 
-before_script:
-  - npm config set registry https://registry.npm.taobao.org/
-  - npm install
-
 stages:
   - test
   - build
@@ -11,6 +7,9 @@ stages:
 
 test:
   stage: test
+  before_script:
+    - npm config set registry https://registry.npm.taobao.org/
+    - npm install
   script:
     - npm run test
 
@@ -18,8 +17,12 @@ build:
   stage: build
   only:
     - master
+  before_script:
+    - npm config set registry https://registry.npm.taobao.org/
+    - npm install
   script:
     - npm run build
+    - cp Dockerfile dist/
   artifacts:
     paths:
       - dist
@@ -31,4 +34,6 @@ deploy:
     - docker:stable-dind
   image: docker:stable
   script:
-    - docker info
+    - docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION .
+    - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
+    - docker push $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION

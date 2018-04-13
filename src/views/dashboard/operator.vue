@@ -14,7 +14,6 @@ export default {
 }
 </script>
 
-
 <style lang="less" scoped>
 .title {
   text-align: center;

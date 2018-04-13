@@ -123,7 +123,7 @@ export default {
   position: fixed;
   height: 100%;
   width: 100%;
-  background-color: @bg;
+  background: linear-gradient(45deg, @bg, @bg + #222);
   .login-form {
     position: absolute;
     left: 0;

@@ -1,12 +1,18 @@
 image: node:8-alpine
 
 before_script:
-  - cp -R /root/DataCenterUI/node_modules /builds/dayucloud/DataCenterUI/
   - npm config set registry https://registry.npm.taobao.org/
   - npm install
 
 stages:
+  - test
   - build
+  - deploy
+
+test:
+  stage: test
+  script:
+    - npm run test
 
 build:
   stage: build
@@ -14,7 +20,15 @@ build:
     - master
   script:
     - npm run build
-    - rm -rf /root/DataCenterUI/dist/js
-    - rm -rf /root/DataCenterUI/dist/css
-    - cp -R /builds/dayucloud/DataCenterUI/dist /root/DataCenterUI/
-    - sed -i 's/localhost\:5000/112.124.3.134\:8300/g' /root/DataCenterUI/dist/js/app.*.js
+  artifacts:
+    path:
+      - dist
+    expire_in: 20min
+
+deploy:
+  stage: deploy
+  services:
+    - docker:stable-dind
+  image: docker:stable
+  script:
+    - docker info

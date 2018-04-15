@@ -31,7 +31,7 @@ build:
 deploy:
   stage: deploy
   services:
-    - docker:stable-dind
+    - docker:stable-dind # gitlab runner 配置中的 privileged 要设置为 true
   image: docker:stable
   script:
     - docker info

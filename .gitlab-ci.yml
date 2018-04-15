@@ -31,7 +31,7 @@ build:
 deploy:
   stage: deploy
   services:
-    - docker:stable-dind
+    - docker:18-dind
   image: docker:stable
   script:
     - docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION .

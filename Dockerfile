@@ -1,9 +1,10 @@
 FROM nginx:alpine
 
-COPY dist/** /usr/share/nginx/html/
+COPY dist/ /usr/share/nginx/html/
+COPY docker-entrypoint.sh /usr/local/bin
 
-ENV API_ROOT='http://localhost:5000'
+ENTRYPOINT docker-entrypoint.sh
 
 EXPOSE 80
 
-CMD [ "nginx -g 'daemon off'" ]
+# CMD [ "nginx -g 'daemon off'" ]

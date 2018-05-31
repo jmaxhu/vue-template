@@ -8,6 +8,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  background-color: #fff;
 }
 
 label {
@@ -52,7 +53,7 @@ a,
 a:focus,
 a:hover {
   cursor: pointer;
-  color: inherit;
+  color: @linkColor;
   text-decoration: none;
 }
 
@@ -153,7 +154,7 @@ div:focus{
 
 .link-type,
 .link-type:focus {
-  color: #337ab7;
+  color: #409eff;
   cursor: pointer;
   &:hover {
     color: rgb(32, 160, 255);

@@ -7,5 +7,7 @@ export default {
   addRouters: state => state.permission.addRouters,
   // 组织树
   orgTree: state => state.org.orgTree,
-  orgTreeList: state => state.org.orgTreeList
+  orgTreeList: state => state.org.orgTreeList,
+  // 额外的 Breadcrumb
+  otherBreadcrumb: state => state.app.currentBreadcrumb ? state.app.otherBreadcrumb[state.app.currentBreadcrumb] : null
 }

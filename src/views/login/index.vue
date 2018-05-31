@@ -65,7 +65,7 @@ export default {
           this.loading = true
           this.$store.dispatch(userTypes.LOGIN, this.loginForm).then(() => {
             this.loading = false
-            this.$router.push({ path: '/' })
+            this.$router.push({ path: '/home' })
           }).catch((res) => {
             this.loading = false
             const msg = res.response.data.responseStatus.message

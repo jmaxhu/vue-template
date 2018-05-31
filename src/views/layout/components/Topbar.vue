@@ -1,5 +1,8 @@
 <template>
   <div class="topbar">
+    <div class="logo">
+      <img class="logo-img" src="@/assets/logo.png" />
+    </div>
     <div class="title">{{ title }}</div>
     <div class="right-menu">
       <el-tooltip effect="dark" content="全屏" placement="bottom">
@@ -11,11 +14,12 @@
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              首页
-            </el-dropdown-item>
-          </router-link>
+          <el-dropdown-item v-if="!isAdmin">
+            <router-link to="/">首页</router-link>
+          </el-dropdown-item>
+          <el-dropdown-item v-if="isAdmin">
+            <router-link to="/dashboard/index">后台管理</router-link>
+          </el-dropdown-item>
           <el-dropdown-item divided>
             <span @click="logout" style="display:block;">退出</span>
           </el-dropdown-item>
@@ -37,7 +41,11 @@ export default {
   computed: {
     ...mapGetters([
       'title'
-    ])
+    ]),
+    isAdmin () {
+      const user = this.$store.state.user.user
+      return user && user.role === 'admin'
+    }
   },
   methods: {
     logout () {
@@ -53,8 +61,9 @@ export default {
 @import url('../../../styles/variables.less');
 
 .topbar {
-  background: linear-gradient(to right, @menuBg, @menuBg + #222);
-  height: 50px;
+  background: linear-gradient(to right, @darkMenuBg, @menuBg);
+  // background-color: @menuBg;
+  height: 60px;
   width: 100%;
   left: 0;
   top: 0;
@@ -62,17 +71,27 @@ export default {
   z-index: 999;
 }
 
+.logo {
+  float: left;
+  padding: 8px 10px 0 10px;
+}
+
+.logo-img {
+  width: 45px;
+}
+
 .title {
-  display: inline-block;
-  color: @textColor;
+  float: left;
+  color: #eee;
   font-size: 1.5em;
-  line-height: 50px;
-  margin-left: 10px;
+  margin-right: 20px;
+  line-height: 60px;
   font-weight: bold;
 }
 
 .right-menu {
   float: right;
+  padding-top: 7px;
   height: 100%;
   &:focus{
     outline: none;
@@ -91,7 +110,7 @@ export default {
     vertical-align: 15px;
   }
   .avatar-container {
-    height: 50px;
+    height: 60px;
     margin-right: 30px;
     .avatar-wrapper {
       cursor: pointer;
@@ -101,14 +120,14 @@ export default {
         width: 30px;
         height: 30px;
         vertical-align: -5px;
-        color: @textColor;
+        color: @bgColor;
       }
       .el-icon-caret-bottom {
         position: absolute;
         right: -18px;
         top: 20px;
         font-size: 12px;
-        color: @textColor;
+        color: @bgColor;
       }
     }
   }

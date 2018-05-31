@@ -58,7 +58,7 @@ export default {
 .screenfull-svg {
   display: inline-block;
   cursor: pointer;
-  fill: @textColor;
+  fill: @bgColor;
   width: 20px;
   height: 20px;
   /* vertical-align: 10px; */

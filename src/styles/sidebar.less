@@ -4,11 +4,17 @@
     min-height: 100%;
     transition: margin-left 0.28s;
     margin-left: 180px;
-    padding-top: 50px;
-  } // 侧边栏
+    padding-top: 60px;
+  }
+
+  .main-container-home {
+    min-height: 100%;
+  }
+
+  // 侧边栏
   .sidebar-container {
     transition: width 0.28s;
-    margin-top: 50px;
+    margin-top: 60px;
     width: 180px!important;
     height: 100%;
     position: fixed;
@@ -91,10 +97,10 @@
   .nest-menu .el-submenu>.el-submenu__title,
   .el-submenu .el-menu-item {
     min-width: 180px!important;
-    background-color: @subMenuBg!important;
-    &:hover {
-      background-color: @menuHover!important;
-    }
+    background-color: @bgColor!important;
+    // &:hover {
+      // background-color: @menuHover!important;
+    // }
   }
   .el-menu--collapse .el-menu .el-submenu{
     min-width: 180px!important;

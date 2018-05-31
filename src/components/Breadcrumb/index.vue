@@ -10,6 +10,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import appTypes from '@/store/types/app'
+
 export default {
   created () {
     this.getBreadcrumb()
@@ -21,17 +24,31 @@ export default {
   },
   watch: {
     $route () {
+      this.$store.dispatch(appTypes.CLEAR_BREADCRUMB)
+      this.getBreadcrumb()
+    },
+    otherBreadcrumb () {
       this.getBreadcrumb()
     }
   },
+  computed: {
+    ...mapGetters([
+      'otherBreadcrumb'
+    ])
+  },
   methods: {
     getBreadcrumb () {
+      let routers = []
       let matched = this.$route.matched.filter(item => item.name)
       const first = matched[0]
       if (first && first.name !== 'dashboard') {
-        matched = [{ path: '/dashboard', meta: { title: '首页' } }].concat(matched)
+        routers.push({ path: '/dashboard', meta: { title: '首页' } })
       }
-      this.levelList = matched
+      if (this.otherBreadcrumb) {
+        routers.push(this.otherBreadcrumb)
+      }
+      routers.push(matched[0])
+      this.levelList = routers
     }
   }
 }

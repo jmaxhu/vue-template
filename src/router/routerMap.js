@@ -1,6 +1,7 @@
 import Layout from '../views/layout/index.vue'
+import AdminLayout from '../views/layout/admin.vue'
 
-const _import = require(`./_import_${process.env.NODE_ENV}`)
+const _import = file => resolve => require(['@/views/' + file + '.vue'], resolve)
 
 /**
   * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -22,11 +23,23 @@ export const constantRouterMap = [
   { path: '/404', component: _import('error/404'), hidden: true },
   { path: '/401', component: _import('error/401'), hidden: true },
   {
+    hidden: true,
     path: '',
     component: Layout,
-    redirect: 'dashboard',
+    redirect: 'home',
     children: [{
-      path: 'dashboard',
+      path: '/home',
+      component: _import('home/index'),
+      name: 'home',
+      meta: { title: '首页', icon: 'fa-home', noCache: true }
+    }]
+  },
+  {
+    path: '/dashboard',
+    component: AdminLayout,
+    redirct: '/dashboard/index',
+    children: [{
+      path: 'index',
       component: _import('dashboard/index'),
       name: 'dashboard',
       meta: { title: '首页', icon: 'fa-home', noCache: true }
@@ -37,7 +50,7 @@ export const constantRouterMap = [
 export const asyncRouterMap = [
   {
     path: '/org',
-    component: Layout,
+    component: AdminLayout,
     redirct: '/org/index',
     meta: { roles: ['admin'] },
     children: [{
@@ -54,7 +67,7 @@ export const asyncRouterMap = [
 
   {
     path: '/user',
-    component: Layout,
+    component: AdminLayout,
     redirct: '/user/index',
     meta: { roles: ['admin'] },
     children: [{
@@ -65,6 +78,22 @@ export const asyncRouterMap = [
         title: '用户管理',
         icon: 'fa-user',
         roles: ['admin']
+      }
+    }]
+  },
+
+  {
+    hidden: true,
+    path: '/info',
+    component: Layout,
+    redirct: '/info/index',
+    children: [{
+      path: 'index',
+      component: _import('info/index'),
+      name: 'info',
+      meta: {
+        title: '工程概况',
+        icon: 'fa-user'
       }
     }]
   },

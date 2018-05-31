@@ -23,6 +23,8 @@ build:
   script:
     - npm run build
     - cp Dockerfile dist/
+    #- rm -rf /root/xxx/xxx/*
+    #- cp -R dist/* /root/xxx/xxx
   artifacts:
     paths:
       - dist
@@ -30,11 +32,14 @@ build:
 
 deploy:
   stage: deploy
+  only:
+    - release
   services:
     - docker:stable-dind # gitlab runner 配置中的 privileged 要设置为 true
   image: docker:stable
   script:
-    - docker info
-    - docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION .
-    - docker login $REGISTRY_HOST -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
-    - docker push $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION
+    - cd dist
+    # docker仓库，tag等信息根据实际项目调整。
+    - docker login -u $DOCKER_USER -p $DOCKER_PWD registry.cn-hangzhou.aliyuncs.com 
+    - docker build -t registry.cn-hangzhou.aliyuncs.com/jmax/xxx:v$(cat version) .
+    - docker push registry.cn-hangzhou.aliyuncs.com/jmax/xxx:v$(cat version)

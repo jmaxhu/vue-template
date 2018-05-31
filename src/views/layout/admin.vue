@@ -1,24 +1,29 @@
 <template>
-<div class="app-wrapper">
+<div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
   <topbar></topbar>
-  <top-menu></top-menu>
-  <div class="main-container-home">
+  <sidebar class="sidebar-container"></sidebar>
+  <div class="main-container">
+    <navbar></navbar>
     <app-main></app-main>
   </div>
-  <footer-bar></footer-bar>
 </div>
 </template>
 
 <script>
-import { AppMain, Topbar, TopMenu, FooterBar } from './components'
+import { Navbar, Sidebar, AppMain, Topbar } from './components'
 
 export default {
   name: 'layout',
   components: {
+    Navbar,
+    Sidebar,
     AppMain,
-    Topbar,
-    TopMenu,
-    FooterBar
+    Topbar
+  },
+  computed: {
+    sidebar () {
+      return this.$store.getters.sidebar
+    }
   }
 }
 </script>

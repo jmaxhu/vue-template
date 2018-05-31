@@ -97,3 +97,15 @@ export function toBoolText (value) {
 export function toUseStatus (value) {
   return value === 'Valid' ? '启用' : '禁用'
 }
+
+/**
+ * 数组分组
+ * @param {array} xs 待分组的数组
+ * @param {string} key 分组的key
+ */
+export function groupBy (xs, key) {
+  return xs.reduce(function (rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x)
+    return rv
+  }, {})
+}

@@ -8,15 +8,14 @@
         class="filter-item"
         style="width: 150px;"
       ></el-input>
-      <el-select clearable
-        placeholder="搜索组织"
-        v-model="query.organizationId"
-        @change="onLoadData"
+      <select-tree
         class="filter-item"
-        style="width: 130px;"
+        placeholder="请选择组织"
+        :data="orgTree"
+        value-key="id"
+        v-model="query.organizationId"
       >
-        <el-option v-for="org in orgTreeList" :key="org.value" :label="org.label" :value="org.value"></el-option>
-      </el-select>
+      </select-tree>
       <el-select clearable
         placeholder="搜索角色"
         v-model="query.role"
@@ -38,7 +37,7 @@
         <el-option label="启用" :value="true"></el-option>
         <el-option label="禁用" :value="false"></el-option>
       </el-select>
-      <el-button type="primary" v-waves @click="onLoadData" icon="el-icon-search" class="filter-item">搜索</el-button>
+      <el-button type="info" v-waves @click="onLoadData" icon="el-icon-search" class="filter-item">搜索</el-button>
       <el-button type="primary" v-waves @click="onAdd" icon="el-icon-circle-plus-outline" class="filter-item">新增</el-button>
     </div>
 
@@ -100,10 +99,13 @@
         <el-form-item label="组织">
           <el-col :span="10">
             <el-form-item>
-              <el-select clearable v-model="currentUser.organizationId" placeholder="选择上级组织">
-                <el-option v-for="org in orgTreeList" :key="org.value" :label="org.label" :value="org.value">
-                </el-option>
-              </el-select>
+              <select-tree
+                placeholder="请选择组织"
+                :data="orgTree"
+                value-key="id"
+                v-model="currentUser.organizationId"
+              >
+              </select-tree>
             </el-form-item>
           </el-col>
           <el-col :span="4" class="form-label required">角色</el-col>
@@ -139,13 +141,14 @@
 import { mapGetters } from 'vuex'
 import orgTypes from '@/store/types/org'
 import userTypes from '@/store/types/user'
-import Pager from '@/components/Pager'
+import { Pager, SelectTree } from '@/components'
 import { Roles } from '@/utils/enums'
 
 export default {
   name: 'UserIndex',
   components: {
-    Pager
+    Pager,
+    SelectTree
   },
   data () {
     return {
@@ -179,7 +182,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'orgTreeList'
+      'orgTree'
     ])
   },
   methods: {

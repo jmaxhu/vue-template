@@ -14,7 +14,7 @@
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-if="!isAdmin">
+          <el-dropdown-item>
             <router-link to="/">首页</router-link>
           </el-dropdown-item>
           <el-dropdown-item v-if="isAdmin">

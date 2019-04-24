@@ -10,9 +10,9 @@ const state = {
 }
 
 const actions = {
-  [userTypes.LOGIN] ({commit}, {userName, password}) {
+  [userTypes.LOGIN] ({ commit }, { userName, password }) {
     return new Promise((resolve, reject) => {
-      userService.login({userName, password}).then(res => {
+      userService.login({ userName, password }).then(res => {
         const data = res.data
         commit('SET_TOKEN', data)
         setToken(data.bearerToken)
@@ -21,7 +21,7 @@ const actions = {
       }).catch(err => reject(err))
     })
   },
-  [userTypes.GET_USER_INFO] ({commit}) {
+  [userTypes.GET_USER_INFO] ({ commit }) {
     const userId = getUserId()
     return new Promise((resolve, reject) => {
       userService.getUserInfo(userId).then(res => {
@@ -32,7 +32,7 @@ const actions = {
       }).catch(err => reject(err))
     })
   },
-  [userTypes.LOGOUT] ({commit}) {
+  [userTypes.LOGOUT] ({ commit }) {
     return new Promise((resolve, reject) => {
       userService.logout().then(() => {
         commit('LOGOUT')
@@ -43,7 +43,7 @@ const actions = {
   /**
    * 查询用户列表
    */
-  [userTypes.GET_USERS] ({commit}, {
+  [userTypes.GET_USERS] ({ commit }, {
     searchName = '',
     organizationId = '',
     role = '',
@@ -52,7 +52,7 @@ const actions = {
     pageSize = 20
   }) {
     return new Promise((resolve, reject) => {
-      userService.getUsers({searchName, organizationId, role, valid, pageIndex, pageSize}).then(res => {
+      userService.getUsers({ searchName, organizationId, role, valid, pageIndex, pageSize }).then(res => {
         resolve(res.data)
       }).catch(err => reject(err))
     })
@@ -60,7 +60,7 @@ const actions = {
   /**
    * 新增或保存一个用户
    */
-  [userTypes.SAVE_USER] ({commit}, user) {
+  [userTypes.SAVE_USER] ({ commit }, user) {
     return new Promise((resolve, reject) => {
       userService.saveUser(user).then(res => {
         resolve(res.data)
@@ -70,7 +70,7 @@ const actions = {
   /**
    * 删除一个用户
    */
-  [userTypes.DELETE_USER] ({commit}, id) {
+  [userTypes.DELETE_USER] ({ commit }, id) {
     return new Promise((resolve, reject) => {
       userService.deleteUser(id).then(res => {
         resolve(res.data)

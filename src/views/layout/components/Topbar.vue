@@ -17,7 +17,7 @@
           <el-dropdown-item>
             <router-link to="/">首页</router-link>
           </el-dropdown-item>
-          <el-dropdown-item v-if="isAdmin">
+          <el-dropdown-item v-if="true">
             <router-link to="/dashboard/index">后台管理</router-link>
           </el-dropdown-item>
           <el-dropdown-item divided>

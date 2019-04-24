@@ -1,4 +1,5 @@
 import * as enums from './enums'
+import { getToken } from './auth'
 
 /**
  * 解析js日期
@@ -108,4 +109,11 @@ export function groupBy (xs, key) {
     (rv[x[key]] = rv[x[key]] || []).push(x)
     return rv
   }, {})
+}
+
+/**
+ * 得到上传控件需要的额外请求头,包括 Accept, Authorization
+ */
+export function getUploadHeaders () {
+  return { Accept: 'application/json', Authorization: `Bearer ${getToken()}` }
 }

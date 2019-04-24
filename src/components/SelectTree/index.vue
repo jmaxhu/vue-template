@@ -38,7 +38,7 @@ export default {
     },
     treeProps: {
       type: Object,
-      default: function () { return {label: 'label', children: 'children'} }
+      default: function () { return { label: 'label', children: 'children' } }
     },
     /**
      * 是否只有点击叶子节点才有效
@@ -81,7 +81,7 @@ export default {
      */
     valueKey: {
       type: String,
-      default: 'value'
+      default: 'id'
     }
   },
   data () {
@@ -112,7 +112,6 @@ export default {
       return Array.isArray(value) ? value : [value]
     },
     setCheckedKeys (keys) {
-      this.text = ''
       this.$nextTick(() => {
         if (this.multiple) {
           this.$refs.tree.setCheckedKeys(keys)
@@ -123,7 +122,7 @@ export default {
         } else {
           let node = this.$refs.tree.getNode(this.value)
           if (node) {
-            this.text = node[this.treeProps['label']]
+            this.text = node.data[this.treeProps['label']]
           }
         }
       })

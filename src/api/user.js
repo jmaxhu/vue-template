@@ -1,22 +1,22 @@
 import request from '@/utils/request'
 
 export default {
-  login ({userName, password}) {
-    return request.get('/auth/credentials', { params: { userName, password } })
+  login ({ userName, password }) {
+    return request.post('/auth/credentials', { userName, password })
   },
   getUserInfo (id) {
-    return request.get(`/user/${id}`)
+    return request.get('/account/user', { params: { id } })
   },
   logout () {
     return request.post('/auth/logout')
   },
   getUsers (params) {
-    return request.get('/user', { params })
+    return request.get('/account/users', { params })
   },
   saveUser (user) {
-    return request.post('/user', user)
+    return request.post('/account/user', user)
   },
   deleteUser (id) {
-    return request.delete('/user', { data: { id } })
+    return request.delete('/account/user', { data: { id } })
   }
 }

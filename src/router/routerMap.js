@@ -49,10 +49,26 @@ export const constantRouterMap = [
 
 export const asyncRouterMap = [
   {
+    path: '/district',
+    component: AdminLayout,
+    meta: { title: '行政区划' },
+    redirct: '/district/index',
+    children: [{
+      path: 'index',
+      component: _import('district/index'),
+      name: 'district',
+      meta: {
+        title: '行政区划',
+        icon: 'fa-chart-area',
+        roles: ['admin']
+      }
+    }]
+  },
+  {
     path: '/org',
     component: AdminLayout,
+    meta: { title: '组织管理' },
     redirct: '/org/index',
-    meta: { roles: ['admin'] },
     children: [{
       path: 'index',
       component: _import('org/index'),
@@ -64,12 +80,66 @@ export const asyncRouterMap = [
       }
     }]
   },
-
+  {
+    path: '/permission',
+    component: AdminLayout,
+    meta: { title: '权限管理' },
+    redirect: '/permission/admin',
+    children: [{
+      path: 'admin',
+      component: _import('permission/index'),
+      name: 'permissionAdmin',
+      meta: {
+        title: '权限管理',
+        icon: 'fa-cogs',
+        roles: ['admin']
+      }
+    }]
+  },
+  {
+    hidden: true,
+    path: '/permission',
+    component: AdminLayout,
+    redirct: '/permission/index',
+    children: [{
+      path: 'index/:appKey',
+      component: _import('permission/index'),
+      name: 'permission',
+      meta: {
+        icon: 'fa-cogs',
+        title: '权限管理'
+      }
+    },
+    {
+      path: 'edit/:id',
+      component: _import('permission/edit'),
+      name: 'permission_edit',
+      meta: {
+        icon: 'fa-cogs',
+        title: '权限维护'
+      }
+    }]
+  },
+  {
+    path: '/role',
+    component: AdminLayout,
+    meta: { title: '角色管理' },
+    redirect: '/role/index',
+    children: [{
+      path: 'index/:appKey',
+      component: _import('role/index'),
+      name: 'role',
+      meta: {
+        title: '角色管理',
+        icon: 'fa-user-tag'
+      }
+    }]
+  },
   {
     path: '/user',
     component: AdminLayout,
+    meta: { title: '用户管理' },
     redirct: '/user/index',
-    meta: { roles: ['admin'] },
     children: [{
       path: 'index',
       component: _import('user/index'),
@@ -86,6 +156,10 @@ export const asyncRouterMap = [
     hidden: true,
     path: '/info',
     component: Layout,
+    meta: {
+      title: '组织管理',
+      icon: 'fa-sitemap'
+    },
     redirct: '/info/index',
     children: [{
       path: 'index',

@@ -138,7 +138,7 @@ export default {
         this.loading = true
         this.$store.dispatch(orgTypes.DELETE_ORG, row.id).then(() => {
           this.loading = false
-          this.$notify.success({title: '成功', message: '删除组织成功.'})
+          this.$notify.success({ title: '成功', message: '删除组织成功.' })
           this.onLoadData()
           this.loadRootOrg()
         }).catch(() => { this.loading = false })
@@ -151,7 +151,7 @@ export default {
           this.$store.dispatch(orgTypes.SAVE_ORG, this.currentOrg).then(() => {
             this.loading = false
             this.diagShow = false
-            this.$notify.success({title: '成功', message: '保存组织成功.'})
+            this.$notify.success({ title: '成功', message: '保存组织成功.' })
             this.onLoadData()
             this.loadRootOrg()
           })

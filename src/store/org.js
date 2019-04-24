@@ -49,7 +49,7 @@ const actions = {
   /**
    * 分页查询组织列表
    */
-  [orgTypes.GET_ORGS] ({commit}, { parentId = '', searchName = '', pageIndex = 1, pageSize = 20 }) {
+  [orgTypes.GET_ORGS] ({ commit }, { parentId = '', searchName = '', pageIndex = 1, pageSize = 20 }) {
     return new Promise((resolve, reject) => {
       orgService.getOrgs({ parentId, searchName, pageIndex, pageSize }).then(res => {
         resolve(res.data)
@@ -59,7 +59,7 @@ const actions = {
   /**
    * 新增或编辑一个组织
    */
-  [orgTypes.SAVE_ORG] ({commit}, org) {
+  [orgTypes.SAVE_ORG] ({ commit }, org) {
     return new Promise((resolve, reject) => {
       orgService.saveOrg(org).then(res => {
         commit('CLEAR_ORG_TREE')
@@ -70,7 +70,7 @@ const actions = {
   /**
    * 删除一个组织
    */
-  [orgTypes.DELETE_ORG] ({commit}, id) {
+  [orgTypes.DELETE_ORG] ({ commit }, id) {
     return new Promise((resolve, reject) => {
       orgService.deleteOrg(id).then(res => {
         commit('CLEAR_ORG_TREE')
@@ -81,7 +81,7 @@ const actions = {
   /**
    * 得到根组织
    */
-  [orgTypes.GET_ROOT_ORGS] ({commit}) {
+  [orgTypes.GET_ROOT_ORGS] ({ commit }) {
     return new Promise((resolve, reject) => {
       orgService.getRootOrgs().then(res => {
         resolve(res.data.results)
@@ -91,10 +91,10 @@ const actions = {
   /**
    * 生成组织树
    */
-  [orgTypes.GET_ORG_TREE] ({state, commit}) {
+  [orgTypes.GET_ORG_TREE] ({ state, commit }) {
     return new Promise((resolve, reject) => {
       if (state.orgTree.length > 0) {
-        resolve({orgTree: state.orgTree, orgTreeList: state.orgTreeList})
+        resolve({ orgTree: state.orgTree, orgTreeList: state.orgTreeList })
       } else {
         // 取全部组织, 最多1000, 如果再多时考虑使用延迟加载方式
         orgService.getOrgs({ pageIndex: 1, pageSize: 1000 }).then(res => {

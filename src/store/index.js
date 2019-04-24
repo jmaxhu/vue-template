@@ -5,6 +5,8 @@ import app from './app'
 import permission from './permission'
 import org from './org'
 import getters from './getters'
+import account from './account'
+import district from './district'
 
 Vue.use(Vuex)
 
@@ -13,7 +15,9 @@ export default new Vuex.Store({
     app,
     user,
     permission,
-    org
+    org,
+    account,
+    district
   },
   getters
 })

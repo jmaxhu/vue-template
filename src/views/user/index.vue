@@ -8,31 +8,12 @@
         class="filter-item"
         style="width: 150px;"
       ></el-input>
-      <select-tree
-        class="filter-item"
-        placeholder="请选择组织"
-        :data="orgTree"
-        value-key="id"
-        v-model="query.organizationId"
-      >
-      </select-tree>
-      <el-select clearable
-        placeholder="搜索角色"
-        v-model="query.role"
-        @change="onLoadData"
-        class="filter-item"
-        style="width:120px;"
-      >
-        <el-option label="系统管理员" value="admin"></el-option>
-        <el-option label="数据操作员" value="operator"></el-option>
-        <el-option label="数据观察员" value="watcher"></el-option>
-      </el-select>
       <el-select clearable
         placeholder="用户状态"
         v-model="query.valid"
         @change="onLoadData"
         class="filter-item"
-        style="width: 100px;"
+        style="width: 110px;"
       >
         <el-option label="启用" :value="true"></el-option>
         <el-option label="禁用" :value="false"></el-option>
@@ -43,13 +24,8 @@
 
     <el-table :data="users" v-loading="loading" border fit highlight-current-row style="width: 100%">
       <el-table-column type="index" width="60" align="center" label="序号"></el-table-column>
-      <el-table-column align="center" label="用户名" prop="userName" width="120"></el-table-column>
-      <el-table-column align="center" label="姓名" prop="displayName" width="100"></el-table-column>
-      <el-table-column label="组织" prop="org">
-        <template slot-scope="scope">
-          {{ scope.row.org && scope.row.org.name }}
-        </template>
-      </el-table-column>
+      <el-table-column align="center" label="用户名" prop="userName"></el-table-column>
+      <el-table-column align="center" label="姓名" prop="displayName"></el-table-column>
       <el-table-column label="创建时间" prop="createdDate" width="120" align="center">
          <template slot-scope="scope">
           {{ scope.row.createdDate | parseJsonDate | formatDate }}
@@ -60,9 +36,9 @@
           {{ scope.row.lastLoginAttempt | parseJsonDate | formatDate }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="状态" prop="useStatus" width="70">
-        <template slot-scope="scope">
-          {{ scope.row.useStatus === 'Valid' ? '启用' : '禁用' }}
+      <el-table-column align="center" label="状态" prop="validStatus" width="70">
+        <template slot-scope="{row}">
+          {{ row.validStatus === 'Valid' ? '启用' : '禁用' }}
         </template>
       </el-table-column>
       <el-table-column align="center" width="150" label="操作">
@@ -86,7 +62,7 @@
         <el-form-item label="用户名" required>
           <el-col :span="10">
             <el-form-item prop="userName">
-              <el-input v-model="currentUser.userName"></el-input>
+              <el-input v-model="currentUser.userName" :readonly="currentUser.id > 0" auto-complete="off"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4" class="form-label required">姓名</el-col>
@@ -96,39 +72,39 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="组织">
+        <el-form-item label="初始密码">
           <el-col :span="10">
             <el-form-item>
-              <select-tree
-                placeholder="请选择组织"
-                :data="orgTree"
-                value-key="id"
-                v-model="currentUser.organizationId"
-              >
-              </select-tree>
+              <el-input type="password" :disabled="currentUser.id > 0" v-model="currentUser.password" auto-complete="off"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4" class="form-label required">角色</el-col>
-          <el-col :span="10">
-            <el-form-item prop="role">
-              <el-select v-model="currentUser.role" placeholder="选择角色">
-                <el-option v-for="role in allRoles" :key="role.value" :label="role.name" :value="role.value"></el-option>
-              </el-select>
-            </el-form-item>
+          <el-col :span="14">
+            <div class="note">注：新增用户时默认密码为：123456 </div>
           </el-col>
         </el-form-item>
         <el-form-item label="状态">
           <el-col :span="10">
             <el-form-item>
-              <el-radio-group v-model="currentUser.useStatus">
+              <el-radio-group v-model="currentUser.validStatus">
                 <el-radio label="Valid">启用</el-radio>
                 <el-radio label="Invalid">禁用</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
+          <el-col :span="4" class="form-label">角色</el-col>
+          <el-col :span="10">
+            <el-form-item>
+              <select-tree
+                v-model="currentUser.roleIds"
+                :data="roles"
+                :treeProps="{label: 'name', children: 'children'}"
+                :multiple="true"
+              >
+              </select-tree>
+            </el-form-item>
+          </el-col>
         </el-form-item>
       </el-form>
-      <div class="note">注：新增用户时默认密码为：123456 </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="diagShow = false">取消</el-button>
         <el-button type="primary" @click="onSave">保存</el-button>
@@ -138,11 +114,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import orgTypes from '@/store/types/org'
 import userTypes from '@/store/types/user'
+import accountTypes from '@/store/types/account'
 import { Pager, SelectTree } from '@/components'
-import { Roles } from '@/utils/enums'
 
 export default {
   name: 'UserIndex',
@@ -155,39 +129,55 @@ export default {
       loading: false,
       diagShow: false,
       diagTitle: '新增用户',
-      allRoles: Roles,
       query: {
         searchName: '',
-        organizationId: '',
-        role: '',
-        valid: true,
+        validStatus: '',
         pageIndex: 1,
         pageSize: 20
       },
       total: 0,
-      currentUser: this.getDefaultUser(),
+      appGroup: {},
+      activeTab: '',
+      currentUser: {},
       users: [],
+      roles: [],
       rules: {
         userName: [
-          { required: true, message: '用户必填' }
+          { required: true, message: '用户名必填' },
+          { min: 4, message: '用户名不能小于4个字符' }
         ],
         displayName: [
           { required: true, message: '姓名必填' }
-        ],
-        role: [
-          { required: true, message: '角色必填' }
         ]
       }
     }
   },
-  computed: {
-    ...mapGetters([
-      'orgTree'
-    ])
-  },
   methods: {
     getDefaultUser () {
-      return { useStatus: 1, dataCatalogIds: [], password: '123456', organizationId: '' }
+      return {
+        id: 0,
+        validStatus: 'Valid',
+        password: '123456'
+      }
+    },
+    getClientUser () {
+      let arr = {}
+      this.appClients.forEach(app => {
+        arr[`c_${app.id}`] = {
+          checked: false,
+          name: app.name,
+          displayName: '',
+          validStatus: 'Valid',
+          userName: '',
+          password: ''
+        }
+      })
+      return arr
+    },
+    loadRoles () {
+      this.$store.dispatch(accountTypes.GET_ROLEGROUPS, { withRoles: true }).then(roles => {
+        this.roles = roles
+      })
     },
     onLoadData () {
       this.loading = true
@@ -197,17 +187,14 @@ export default {
         this.loading = false
       })
     },
-    loadOrgTree () {
-      this.$store.dispatch(orgTypes.GET_ORG_TREE)
-    },
     onCurrentChange (pageIndex) {
       this.query.pageIndex = pageIndex
-      this.doLoadData()
+      this.onLoadData()
     },
     onSizeChange (pageSize) {
       this.query.pageIndex = 1
       this.query.pagesize = pageSize
-      this.doLoadData()
+      this.onLoadData()
     },
     onAdd () {
       this.diagTitle = '新增用户'
@@ -220,8 +207,6 @@ export default {
     onEdit (row) {
       this.diagTitle = '编辑用户'
       let user = Object.assign({}, row)
-      user.organizationId = (row.org && row.org.id) || ''
-      user.dataCatalogIds = row.dataCatalogs && row.dataCatalogs.map(x => x.id)
       this.currentUser = user
       this.diagShow = true
     },
@@ -230,7 +215,7 @@ export default {
         this.loading = true
         this.$store.dispatch(userTypes.DELETE_USER, row.id).then(() => {
           this.loading = false
-          this.$notify.success({title: '成功', message: '删除用户成功.'})
+          this.$notify.success({ title: '成功', message: '删除用户成功.' })
           this.onLoadData()
         }).catch(() => { this.loading = false })
       }).catch(() => {})
@@ -239,10 +224,11 @@ export default {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch(userTypes.SAVE_USER, this.currentUser).then(() => {
+          let user = Object.assign({}, this.currentUser)
+          this.$store.dispatch(userTypes.SAVE_USER, user).then(() => {
             this.loading = false
             this.diagShow = false
-            this.$notify.success({title: '成功', message: '保存用户成功.'})
+            this.$notify.success({ title: '成功', message: '保存用户成功.' })
             this.onLoadData()
           })
         }
@@ -250,8 +236,11 @@ export default {
     }
   },
   created () {
-    this.loadOrgTree()
+    this.currentUser = this.getDefaultUser()
+  },
+  mounted () {
     this.onLoadData()
+    this.loadRoles()
   }
 }
 </script>
@@ -259,6 +248,6 @@ export default {
 <style lang="less" scoped>
 .note {
   color: #aaa;
-  margin-left: 30px;
+  margin-left: 50px;
 }
 </style>

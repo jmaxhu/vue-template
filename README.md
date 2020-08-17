@@ -7,6 +7,6 @@
 先 clone 项目，一般不需要模板的提交历史，只 clone 最新的即可。
 
 ```shell
-git clone --depth=1 https://g.zjdyit.cn/maxwell/vue-template.git [new name]
+git clone --depth=1 https://gitee.com/maxwell/vue-template.git [new name]
 ```
 再添加到自己的库中。

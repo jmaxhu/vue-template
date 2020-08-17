@@ -1,7 +1,7 @@
 <template>
 <div class="menu-wrapper">
-  <template v-if="!item.hidden && item.children">
-    <template v-for="item in routes">
+  <template v-for="item in routes">
+    <template v-if="!item.hidden && item.children">
       <router-link v-if="item.children.filter(x => !x.hidden).length === 1 && !item.children[0].children && !item.alwaysShow"
         :to="`${item.path}/${item.children[0].path}`" :key="item.children[0].name">
         <el-menu-item :index="`${item.path}/${item.children[0].path}`" :class="{'submenu-title-noDropdown':!isNest}">
@@ -16,8 +16,8 @@
           <span v-if="item.meta && item.meta.title">{{item.meta.title}}</span>
         </template>
 
-        <template v-if="!child.hidden">
-          <template v-for="child in item.children">
+        <template v-for="child in item.children">
+          <template v-if="!child.hidden">
             <sidebar-item :is-nest="true" class="nest-menu" v-if="child.children && child.children.length>0" :routes="[child]" :key="child.path"></sidebar-item>
             <router-link v-else :to="`${item.path}/${child.path}`" :key="child.name">
               <el-menu-item :index="`${item.path}/${child.path}`">
